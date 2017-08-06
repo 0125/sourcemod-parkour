@@ -1,0 +1,152 @@
+- References:
+	https://forums.alliedmods.net/showthread.php?t=189751
+	- Checkpoints
+		- https://forums.alliedmods.net/showthread.php?t=118215?t=118215
+		- https://forums.alliedmods.net/showthread.php?t=118354?t=118354
+		- https://forums.alliedmods.net/showthread.php?t=189751
+
+- Features
+	- Disable collision between players
+	- Increased player count, atleast 8
+	- Bots don't move
+	- When a player leaves his bot is killed
+	- Spawn room closets are disabled
+	- Instant respawn after death
+	- Disable collision between players
+	- Option to show map changing menu with all maps in mapscycle.txt to winning player instead of automatically changing the map
+	- On map completion freeze players
+	- MOTD and banner hosted on github, use github websites for motd
+	- Remove all weapon spawns & starting weapon OR
+	only remove pistol and set all weapon ammo to 0
+		- If not removing weapons check if player dying over and over again doesnt duplicate
+		weapon models infinitely and crash the server
+	- Give pain pills and a kit on map start & respawn
+	- Enable pirated version of l4d to connect to the server
+		- sv_pure 0
+		- sv_consistency 0
+		- sv_tags <pirate related tags?>
+		- more?
+	- Automatic restart on crash and scheduled restarts
+		- Are scheduled restarts necessary?
+	- All in-game votes disabled except kick player which should optionally temporarily ban a player for x amount of time
+		- Or also disable the in-game kick player and enable/create !votekick through sourcemod
+
+- General notifications
+	- [to newly joined player] Welcome to <server name> <server ip> <server website / motd>
+	- [to everyone] <player> joined. <insert some stats>
+	- <player> finished in <map completion time>. <insert some stats>
+		- if new map record: New map record set by <player>!
+	- All sourcemod activity
+		- configured in: cfg/sourcemod/sourcemod.cfg
+- Information notifications
+	- When scheduled restarts take place
+		- eg: Midnight gmt+1
+	- If x amount of total deaths show certain messages / 'New player' messages. These should only be shown a few times (3/4) to each player
+		- Hold down <ctrl, shift||crouch, walk> while in the air for a more solid landing
+		- Visit <webpage, eg: steam guide> for videos on how to complete each map or certain sections in a map
+		recorded with NOHBoard overlay to indicate key presses
+		- <insert more possible message here>
+		- List of available commands. Either in one notification or combined into one
+- Checkpoints
+	- Code
+		- Have two categories of checkpoints
+			1. named checkpoints: beginning, start and finish. Start and finish mandatory for each map
+			and beginning as optional to teleport players to before they have unlocked any checkpoints
+			on maps like no mercy 3 where you otherwise would have to walk across the entire map to reach
+			the hospital tower at the end
+				- start checkpoint should be close to the start of the jumps
+			2. checkpoints during the map
+	- Visual / in-game
+		- Mark checkpoints with an object/light you can stand on or under eg: tables/lights
+- Switch map after x amount of time
+	- Convar which sets x
+		- Default of 10 minutes
+	- Notify time left in the chat with intervals of a few minutes,
+	and either a countdown or interval of 5/10 seconds with less than 30 seconds left
+- Stats
+	- Wins
+	- Deaths
+	- Jumps?
+	- Map
+		- Wins
+		- Deaths
+		- PB
+			- Up to miliseconds if possible
+		- Jumps?
+		
+- Advanced features
+	- Show player specific HUD timer with time passed since activating 'start' checkpoint
+		- Also show this timer to a spectating player
+	- Visualize checkpoints during creation and after they have been saved
+	- Use database for stats
+	- Logging
+		- As done in previously listed plugin
+	- A HUD positioned so it does not overlay the default or rbhud's chat position to show certain stats, for example:
+		- Player name
+		- Map deaths
+		- Total deaths
+		- Map PB
+		- Current time since 'start' checkpoint
+		- Etc.
+	- New maps
+		- NM3 hospital tower
+	- Modifications to existing maps
+		- BH1
+			- Make the final jump at bh1 easier
+				- First practice it a bit more to confirm it is too difficult
+			- Replace / adjust 'laggy' telephone poles and fence
+		- BH4
+			- Move checkpoint near the bridge
+			- Replace / adjust 'laggy' telephone pole and fence tunnel
+	
+
+- Commands
+	- !stats [player]
+		Broadcasts players stats to everyone, or own stats if no player specified
+		
+	- !wr
+		Broadcasts current map record to everyone
+		
+	- !kill
+		Kills player
+		
+	- !csm
+		Switch character model
+			Save character model preference until player disconnects
+			Set saved character model on respawn
+			
+	- !spec / !spectate / !afk
+		Switch to spectate mode
+		
+	- !join
+		Take control of a bot
+			Add a new bot if all bots are taken
+			
+	- !time
+		Show time passed since activating 'start' checkpoint
+		
+	- !timeleft
+		Show time left on current map
+		
+	- !mapvote
+		Menu with maps in mapcycle.txt to start a map vote
+	
+- Dev Commands
+	- !chk_save [title, radius]
+		Save checkpoint
+		title =
+			beginning, start, finish or blank for normal checkpoints weighting is determined by order they were added,
+		eg: if player has unlocked all normal checkpoints they will be teleported to the last added one
+		radius =
+			replaces the default radius if specified
+		
+	- !chk_delete <title>
+		Delete checkpoint
+		title =
+			beginning, start, finish or blank for normal checkpoints in which case the last added checkpoint is deleted
+		
+	- !chk_deleteall
+		Delete all checkpoints on the current map
+		
+	- !chk_show
+		Print all checkpoints on the current map

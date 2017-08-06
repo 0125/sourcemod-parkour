@@ -1,72 +1,42 @@
 public Action Command_Test(int client, int args)
 {
-	ReplyToCommand(client, "command_test");
+	if (IsValidClient(client) && !IsFakeClient(client)) {
+		GetClientAuthId(client, AuthId_Steam3, g_strSteamId[client], PLATFORM_MAX_PATH);
+		GetClientName(client, g_strName[client], MAX_NAME_LENGTH);
+
+		char fastestTimeFormatted[512];
+		if (g_iFastestTime[client] > 0)
+			FormatTime(fastestTimeFormatted, sizeof(fastestTimeFormatted), "%H:%M:%S", g_nullTime + g_iFastestTime[client]);
+		else
+			fastestTimeFormatted = "None";
+		
+		PrintToChatAll("%s joined. Deaths: %i Wins: %i PB: %s", g_strName[client], g_iMapDeaths[client], g_iMapWins[client], fastestTimeFormatted);
+	}
+	
 	return Plugin_Handled;
 }
 
 void TestFunction() {
-	int checkpoint;
-	int checkpointsSaved;
-	char checkpointName[128];
-	float pos[3];
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i)) {
-			int client = i;
-			char clientName[MAX_NAME_LENGTH];
-			GetClientName(client, clientName, MAX_NAME_LENGTH);
-			GetClientAbsOrigin(client, pos);
-			checkpoint = 0;
-			chk.Rewind();
-			chk.JumpToKey(g_strMapName);
-			checkpointsSaved = chk.GotoFirstSubKey();
-			if (checkpointsSaved) {
-				do {
-					checkpoint++;
-					
-					if (g_bHasCheckpoint[client][checkpoint] == false) {
-						chk.GetSectionName(checkpointName, sizeof(checkpointName));
-						chk.JumpToKey("position");
-						float xPos = chk.GetFloat("x");
-						float yPos = chk.GetFloat("y");
-						float zPos = chk.GetFloat("z");
-						chk.GoBack();
-						
-						if (isPlayerNearCoordinates(client, RoundFloat(xPos), RoundFloat(yPos), RoundFloat(zPos))) {
-							g_bHasCheckpoint[client][checkpoint] = true;
-							
-							if (checkpoint > g_iCurrentCheckpoint[client]) {
-								g_iCurrentCheckpoint[client] = checkpoint;
-								g_iCurrentCheckpointName[client] = checkpointName;
-							}
-							
-							PrintToServer("g_iCurrentCheckpoint = %i, g_iCurrentCheckpointName = %s", g_iCurrentCheckpoint[client], g_iCurrentCheckpointName[client]);
-							PrintToServer("[CHECKPOINT] %s reached checkpoint %s", clientName, checkpointName);
-						}
-					}
-				} while (chk.GotoNextKey());
-			}
-		}
-	}
+	// char buffer[512];
+	// FormatTime(buffer, sizeof(buffer), "%H:%M:%S", g_nullTime + 60);
+	// PrintDebug("TestFunction: %s", buffer);
+	
+	PrintDebug("TestFunction");
 }
 
-bool isPlayerNearCoordinates(int client, int chkX, int chkY, int chkZ) {
-	float pos[3];
-	GetClientAbsOrigin(client, pos);
+public Action TestTimer(Handle timer) {
+	PrintToServer("TestTimer");
 	
-	int playerX = RoundFloat(pos[0]);
-	int playerY = RoundFloat(pos[1]);
-	int playerZ = RoundFloat(pos[2]);
+	static int count;
 	
-	int radius = 150;
+	count++;
 	
-	bool xInRange = (playerX > (chkX - radius) && playerX < (chkX + radius));
-	bool yInRange = (playerY > (chkY - radius) && playerY < (chkY + radius));
-	bool zInRange = (playerZ > (chkZ - radius) && playerZ < (chkZ + radius));
+	if (count == 5) {
+		PrintToServer("5 seconds have passed, stopping timer");
+		return Plugin_Stop;
+	}
 	
-	if (xInRange && yInRange && zInRange)
-		return true;
-	else
-		return false;
+	return Plugin_Handled;
 }
 
 void BrowseKeyValues(KeyValues kv)

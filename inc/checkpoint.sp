@@ -1,61 +1,138 @@
+// use SetVector(const char[] key, const float vec[3])
+// 		https://sm.alliedmods.net/new-api/keyvalues/KeyValues/SetVector
+
 void resetCheckpoints() {
+	for (int i = 1; i <= MaxClients; i++)
+		resetPlayerCheckpoints(i);
+}
+
+void resetPlayerCheckpoints(int client) {
 	int checkpoint;
 	char checkpointName[128];
-	for (int i = 1; i <= MaxClients; i++) {
-		if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i)) {
-			int client = i;
-			checkpoint = 0;
-			chk.Rewind();
-			chk.JumpToKey(g_strMapName);
-			chk.GotoFirstSubKey();
-			do {
-				checkpoint++;
-				chk.GetSectionName(checkpointName, sizeof(checkpointName));
-				PrintToServer("checkpointName = %s", checkpointName);
-				g_bHasCheckpoint[client][checkpoint] = false;
-				g_iCurrentCheckpoint[client] = 0;
-				g_iCurrentCheckpointName[client] = "";
-			} while (chk.GotoNextKey());
+	
+	if (IsValidClient(client) && !IsFakeClient(client)) {
+		checkpoint = 0;
+		g_hChk.Rewind();
+		g_hChk.JumpToKey(g_strMapName);
+		g_hChk.GotoFirstSubKey();
+		do {
+			checkpoint++;
+			g_hChk.GetSectionName(checkpointName, sizeof(checkpointName));
+			g_bHasCheckpoint[client][checkpoint] = false;
+		} while (g_hChk.GotoNextKey());
+		g_iCurrentCheckpoint[client] = 0;
+		g_iCurrentCheckpointName[client] = "";
+	}
+}
+
+bool isPlayerNearCoordinates(int client, int checkpointX, int checkpointY, int checkpointZ) {
+	float pos[3];
+	GetClientAbsOrigin(client, pos);
+	
+	int playerX = RoundFloat(pos[0]);
+	int playerY = RoundFloat(pos[1]);
+	int playerZ = RoundFloat(pos[2]);
+	
+	int radius = 150;
+	
+	bool xInRange = (playerX > (checkpointX - radius) && playerX < (checkpointX + radius));
+	bool yInRange = (playerY > (checkpointY - radius) && playerY < (checkpointY + radius));
+	bool zInRange = (playerZ > (checkpointZ - radius) && playerZ < (checkpointZ + radius));
+	
+	if (xInRange && yInRange && zInRange)
+		return true;
+	else
+		return false;
+}
+
+void checkpointTimer(char[] args) {
+	if (StrEqual(args, "start", false)) {
+		if (g_checkpointTimer == null) {
+			g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+			PrintToServer("Started checkpoint timer");
 		}
 	}
-	PrintToServer("resetCheckpoints");
+	if (StrEqual(args, "stop", false)) {
+		if (g_checkpointTimer != null) {
+			KillTimer(g_checkpointTimer);
+			g_checkpointTimer = null;
+			PrintToServer("Stopped checkpoint timer");
+		}
+	}
 }
 
 public Action checkCheckpoint(Handle timer) {
-	TestFunction();
-	
-	// char buffer[128];
-	// buffer = "this is a test";
-	// PrintToServer("test: %s", buffer);
-	
-	// float positionAngle[3];
-	// for (int i = 1; i <= MaxClients; i++) {
-		// if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i)) {
-			// char clientName[MAX_NAME_LENGTH];
-			// GetClientName(i, clientName, MAX_NAME_LENGTH);
-			// GetClientAbsOrigin(i, positionAngle);
-			// if (RoundFloat(positionAngle[0]) == RoundFloat(g_flArrCheckpoint[0])) {
-				// PrintToChatAll("[PARKOUR] %s reached the checkpoint", clientName);
-				// bHasCheckpoint[i][buffer] = true;
-			// }
-			// PrintToServer("client: %i, clientName: %s, coordinates: %f %f %f, bHasCheckpoint = %i", i, clientName, positionAngle[0], positionAngle[1], positionAngle[2], bHasCheckpoint[i]);
-		// }
-	// }
-	
-	// float positionAngle[3];
-	// for (int i = 1; i <= MaxClients; i++) {
-		// if (IsClientInGame(i) && IsPlayerAlive(i) && !IsFakeClient(i) && !bHasCheckpoint[i]) {
-			// char clientName[MAX_NAME_LENGTH];
-			// GetClientName(i, clientName, MAX_NAME_LENGTH);
-			// GetClientAbsOrigin(i, positionAngle);
-			// if (RoundFloat(positionAngle[0]) == RoundFloat(g_flArrCheckpoint[0])) {
-				// PrintToChatAll("[PARKOUR] %s reached the checkpoint", clientName);
-				// bHasCheckpoint[i] = true;
-			// }
-			// PrintToServer("client: %i, clientName: %s, coordinates: %f %f %f, bHasCheckpoint = %i", i, clientName, positionAngle[0], positionAngle[1], positionAngle[2], bHasCheckpoint[i]);
-		// }
-	// }
-	return Plugin_Continue;
+	PrintToServer("checkCheckpoint");
+	int checkpoint;
+	char checkpointName[128];
+	float pos[3];
+	for (int i = 1; i <= MaxClients; i++) {
+		if (IsValidClient(i) && !IsFakeClient(i)) {
+			int client = i;
+			GetClientAbsOrigin(client, pos);
+			checkpoint = 0;
+			g_hChk.Rewind();
+			g_hChk.JumpToKey(g_strMapName);
+			if (g_hChk.GotoFirstSubKey()) {
+				do {
+					checkpoint++;
+					
+					if (g_bHasCheckpoint[client][checkpoint] == false) {
+						g_hChk.GetSectionName(checkpointName, sizeof(checkpointName));
+						g_hChk.JumpToKey("position");
+						float xPos = g_hChk.GetFloat("x");
+						float yPos = g_hChk.GetFloat("y");
+						float zPos = g_hChk.GetFloat("z");
+						g_hChk.GoBack();
+						
+						if (isPlayerNearCoordinates(client, RoundFloat(xPos), RoundFloat(yPos), RoundFloat(zPos))) {
+							g_bHasCheckpoint[client][checkpoint] = true;
+							
+							if (checkpoint > g_iCurrentCheckpoint[client]) {
+								g_iCurrentCheckpoint[client] = checkpoint;
+								g_iCurrentCheckpointName[client] = checkpointName;
+							}
+
+							if (StrEqual(checkpointName, "start", false)) {
+								g_iStartTime[client] = GetTime();
+							}
+							
+							if (StrEqual(checkpointName, "finish", false)) {
+								if (g_iStartTime[client] == 0) {
+									PrintToServer("finish checkpoint was unlocked without starting checkpoint being unlocked");
+									return Plugin_Handled;
+								}
+								checkpointTimer("stop");
+								
+								g_iTotalWins[client]++;
+								g_iMapWins[client]++;
+								g_iFinishTime[client] = GetTime() - g_iStartTime[client];
+								if (g_iFinishTime[client] < g_iFastestTime[client] || g_iFastestTime[client] == 0) // save if faster then previous, or nothing yet saved
+									g_iFastestTime[client] = g_iFinishTime[client];
+
+								char fastestTimeFormatted[512];
+								FormatTime(fastestTimeFormatted, sizeof(fastestTimeFormatted), "%H:%M:%S", g_nullTime + g_iFastestTime[client]);
+								
+								char currentTimeFormatted[512];
+								FormatTime(currentTimeFormatted, sizeof(currentTimeFormatted), "%H:%M:%S", g_nullTime + g_iFinishTime[client]);
+									
+								PrintToChatAll("[CHECKPOINT] %s finished in %s! PB: %s Wins: %i Deaths: %i", g_strName[client], currentTimeFormatted, fastestTimeFormatted, g_iMapWins[client], g_iMapDeaths[client]);
+								
+								if (!g_iDebugMode)
+									CreateTimer(10.0, loadNextMap);
+									
+								// PrintToServer("checkCheckpoint: g_iMapWins[client]: %i", g_iMapWins[client]);
+								return Plugin_Handled;
+							}
+							
+							PrintToChatAll("[CHECKPOINT] %s reached checkpoint %s", g_strName[client], checkpointName);
+						}
+					}
+				} while (g_hChk.GotoNextKey());
+			}
+		}
+	}
+	return Plugin_Handled;
 }
 
 public Action Command_Checkpoint_Save(int client, int args) {
@@ -66,33 +143,33 @@ public Action Command_Checkpoint_Save(int client, int args) {
 	char arg1[128];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	if (arg1[0] == 0) {
-		ReplyToCommand(client, "[CHECKPOINT] Usage: chk_save <checkpoint>");
+		ReplyToCommand(client, "[CHECKPOINT] Usage: g_hChk_save <checkpoint>");
 		return Plugin_Handled;
 	}
-	KillTimer(g_checkpointTimer);
+	checkpointTimer("stop");
 	resetCheckpoints();
-	float chkPos[3];
-	GetClientAbsOrigin(client, chkPos);
-	float chkAngle[3];
-	GetClientEyeAngles(client, chkAngle);
+	float checkpointPos[3];
+	GetClientAbsOrigin(client, checkpointPos);
+	float checkpointAngle[3];
+	GetClientEyeAngles(client, checkpointAngle);
 
-	chk.Rewind();
-	chk.JumpToKey(g_strMapName, true);
-	chk.JumpToKey(arg1, true);
-	chk.JumpToKey("position", true);
-	chk.SetFloat("x", chkPos[0]);
-	chk.SetFloat("y", chkPos[1]);
-	chk.SetFloat("z", chkPos[2]);
-	chk.GoBack();
-	chk.JumpToKey("angle", true);
-	chk.SetFloat("pitch", chkAngle[0]);
-	chk.SetFloat("yaw", chkAngle[1]);
-	chk.SetFloat("roll", chkAngle[2]);
+	g_hChk.Rewind();
+	g_hChk.JumpToKey(g_strMapName, true);
+	g_hChk.JumpToKey(arg1, true);
+	g_hChk.JumpToKey("position", true);
+	g_hChk.SetFloat("x", checkpointPos[0]);
+	g_hChk.SetFloat("y", checkpointPos[1]);
+	g_hChk.SetFloat("z", checkpointPos[2]);
+	g_hChk.GoBack();
+	g_hChk.JumpToKey("angle", true);
+	g_hChk.SetFloat("pitch", checkpointAngle[0]);
+	g_hChk.SetFloat("yaw", checkpointAngle[1]);
+	g_hChk.SetFloat("roll", checkpointAngle[2]);
 
-	chk.Rewind();
-	chk.ExportToFile(g_strCheckpointsFile);
+	g_hChk.Rewind();
+	g_hChk.ExportToFile(g_strCheckpointsFile);
 	ReplyToCommand(client, "[CHECKPOINT] Saved checkpoint");
-	g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+	checkpointTimer("start");
 	return Plugin_Handled;
 }
 
@@ -100,66 +177,66 @@ public Action Command_Checkpoint_Delete(int client, int args) {
 	char arg1[128];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	if (arg1[0] == 0) {
-		ReplyToCommand(client, "[CHECKPOINT] Usage: chk_delete <checkpoint>");
+		ReplyToCommand(client, "[CHECKPOINT] Usage: g_hChk_delete <checkpoint>");
 		return Plugin_Handled;
 	}
-	KillTimer(g_checkpointTimer);
+	checkpointTimer("stop");
 	resetCheckpoints();
-	chk.Rewind();
-	if (!chk.JumpToKey(g_strMapName)) {
+	g_hChk.Rewind();
+	if (!g_hChk.JumpToKey(g_strMapName)) {
 		ReplyToCommand(client, "[CHECKPOINT] Could not find current map (%s) section.", g_strMapName);
-		g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+		checkpointTimer("start");
 		return Plugin_Handled;
 	}
-	if (!chk.JumpToKey(arg1)) {
+	if (!g_hChk.JumpToKey(arg1)) {
 		ReplyToCommand(client, "[CHECKPOINT] Could not find checkpoint (%s) section.", arg1);
-		g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+		checkpointTimer("start");
 		return Plugin_Handled;
 	}
-	chk.DeleteThis();
-	chk.Rewind();
-	chk.ExportToFile(g_strCheckpointsFile);
+	g_hChk.DeleteThis();
+	g_hChk.Rewind();
+	g_hChk.ExportToFile(g_strCheckpointsFile);
 	ReplyToCommand(client, "[CHECKPOINT] Deleted checkpoint");
-	g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+	checkpointTimer("start");
 	return Plugin_Handled;
 }
 
 public Action Command_Checkpoint_DeleteAll(int client, int args) {
-	KillTimer(g_checkpointTimer);
+	checkpointTimer("stop");
 	resetCheckpoints();
-	chk.Rewind();
-	if (!chk.JumpToKey(g_strMapName)) {
+	g_hChk.Rewind();
+	if (!g_hChk.JumpToKey(g_strMapName)) {
 		ReplyToCommand(client, "[CHECKPOINT] Could not find current map (%s) section.", g_strMapName);
-		g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+		checkpointTimer("start");
 		return Plugin_Handled;
 	}
-	chk.DeleteThis();
-	chk.Rewind();
-	chk.ExportToFile(g_strCheckpointsFile);
+	g_hChk.DeleteThis();
+	g_hChk.Rewind();
+	g_hChk.ExportToFile(g_strCheckpointsFile);
 	ReplyToCommand(client, "[CHECKPOINT] Deleted all checkpoints on the current map");
-	g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+	checkpointTimer("start");
 	return Plugin_Handled;
 }
 
 public Action Command_Checkpoint_Show(int client, int args) {
-	KillTimer(g_checkpointTimer);
-	chk.Rewind();
-	if (!chk.JumpToKey(g_strMapName)) {
+	checkpointTimer("stop");
+	g_hChk.Rewind();
+	if (!g_hChk.JumpToKey(g_strMapName)) {
 		ReplyToCommand(client, "[CHECKPOINT] Could not find current map (%s) section.", g_strMapName);
-		g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+		checkpointTimer("start");
 		return Plugin_Handled;
 	}
-	if (!chk.GotoFirstSubKey()) {
+	if (!g_hChk.GotoFirstSubKey()) {
 		ReplyToCommand(client, "[CHECKPOINT] No checkpoints saved on (%s)", g_strMapName);
-		g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+		checkpointTimer("start");
 		return Plugin_Handled;
 	}
 	
 	char buffer[128];
 	do {
-		chk.GetSectionName(buffer, sizeof(buffer));
+		g_hChk.GetSectionName(buffer, sizeof(buffer));
 		ReplyToCommand(client, "[CHECKPOINT] %s", buffer);
-	} while (chk.GotoNextKey());
-	g_checkpointTimer = CreateTimer(1.0, checkCheckpoint, _, TIMER_REPEAT);
+	} while (g_hChk.GotoNextKey());
+	checkpointTimer("start");
 	return Plugin_Handled;
 }
