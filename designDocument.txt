@@ -6,10 +6,11 @@
 		- https://forums.alliedmods.net/showthread.php?t=189751
 
 - Features
+	- Bots
+		- Increased player count, atleast 8
+		- Start out without any bots, add new bot for a newly joining player and when a player leaves his bot is killed 
+			- If this is not possible, make it so bots don't move and teleport them back to the beginning saferoom
 	- Disable collision between players
-	- Increased player count, atleast 8
-	- Bots don't move
-	- When a player leaves his bot is killed
 	- Spawn room closets are disabled
 	- Instant respawn after death
 	- Disable collision between players
@@ -34,8 +35,11 @@
 - General notifications
 	- [to newly joined player] Welcome to <server name> <server ip> <server website / motd>
 	- [to everyone] <player> joined. <insert some stats>
-	- <player> finished in <map completion time>. <insert some stats>
-		- if new map record: New map record set by <player>!
+	- if player beat the map with practice mode enabled
+		- [client] You reached the finish using practice mode. Disable using !reset
+	- else
+		- [all players] <player> finished in <map completion time>. <insert some stats>
+			- if new map record: New map record set by <player>!
 	- All sourcemod activity
 		- configured in: cfg/sourcemod/sourcemod.cfg
 - Information notifications
@@ -130,9 +134,21 @@
 		
 	- !mapvote
 		Menu with maps in mapcycle.txt to start a map vote
+		
+	- !help
+		Print all information notifications in console, notify the player about this
+		L4d1 has a bug where the console content gets scrabled, would this affect the command?
 	
-- Dev Commands
-	- !chk_save [title, radius]
+	- !checkpoint
+		Enable practice mode for the player, save current coordinates as checkpoint possibly overriding previously
+		saved practice checkpoint. print checkpoint saved to the player and if this command
+		call enables practice mode, notify user about !reset if they want to complete the map normally and
+		the fact that there checkpoints have been reset
+		
+	- !reset
+		reset all checkpoints for the player except 'beginning', disable practice mode and then respawn the player
+	
+	- !chk_save [title, radius] (admin only)
 		Save checkpoint
 		title =
 			beginning, start, finish or blank for normal checkpoints weighting is determined by order they were added,
@@ -140,13 +156,13 @@
 		radius =
 			replaces the default radius if specified
 		
-	- !chk_delete <title>
+	- !chk_delete <title> (admin only)
 		Delete checkpoint
 		title =
 			beginning, start, finish or blank for normal checkpoints in which case the last added checkpoint is deleted
 		
-	- !chk_deleteall
+	- !chk_deleteall (admin only)
 		Delete all checkpoints on the current map
 		
-	- !chk_show
+	- !chk_show (admin only)
 		Print all checkpoints on the current map
