@@ -1,0 +1,36 @@
+Default kain parkour server has increased bots and probably increased maxplayers
+	- Runs l4d_superversus, left4downtown bebop and possibly more plugins to make this possible
+
+Increasing maximum players
+	Left 4 Downtown 2 - L4D2 Only, Updated Left4Downtown
+		https://forums.alliedmods.net/showthread.php?t=134032&highlight=downtown
+	
+	"You can force director_no_human_zombies to 0 on normal maps and it'll increase the slot limit to 8."
+		https://forums.alliedmods.net/showpost.php?p=724352&postcount=10
+	L4DToolZ
+		https://forums.alliedmods.net/showthread.php?t=93600?t=93600
+			helper thread: https://forums.alliedmods.net/showthread.php?t=232367
+	L4DToolZ Config
+		sv_maxplayers "whateveryouwant"
+		sv_visiblemaxplayers "-1"
+		sv_removehumanlimit "1"
+		sv_force_unreserved "1"
+		note
+			if you want to use connecting though lobby and connecting through the
+			+connect command you need another mod that removes the lobby reservation.
+
+Additional usable bots
+	bebop
+		https://forums.alliedmods.net/showthread.php?t=110210?t=110210
+		
+	[L4D(2)] MultiSlots
+		https://forums.alliedmods.net/showthread.php?t=132408?t=132408
+		
+	[L4D2] Botcreator
+		https://forums.alliedmods.net/showthread.php?t=114362&highlight=botcreator?t=114362&highlight=botcreator
+	
+	[L4D(2)] SuperVersus [1.5.4]
+		https://forums.alliedmods.net/showthread.php?p=830069?p=830069
+	
+	Player-Plus
+		https://github.com/ve3tit/l4d2

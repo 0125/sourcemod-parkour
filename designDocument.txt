@@ -18,6 +18,9 @@
 	- On map completion freeze players
 	- MOTD and banner hosted on github, use github websites for motd
 	- Remove all weapon spawns & starting weapon OR
+	- Instantly kill players when they get incapitated
+	- Disable players from going afk
+		- Have a convar to set after how many seconds when the player would have gone afk he should be kicked
 	only remove pistol and set all weapon ammo to 0
 		- If not removing weapons check if player dying over and over again doesnt duplicate
 		weapon models infinitely and crash the server
@@ -61,7 +64,10 @@
 				- start checkpoint should be close to the start of the jumps
 			2. checkpoints during the map
 	- Visual / in-game
-		- Mark checkpoints with an object/light you can stand on or under eg: tables/lights
+		- Light beam going up in the sky, examples:
+				- https://github.com/0125/sourcemod-parkour/issues/7
+				- https://youtu.be/sRLKsxwojmI?t=53
+			- Alternative: Mark checkpoints with an object/light you can stand on or under eg: tables/lights
 - Switch map after x amount of time
 	- Convar which sets x
 		- Default of 10 minutes
@@ -70,18 +76,21 @@
 - Stats
 	- Wins
 	- Deaths
+	- Play time
 	- Jumps?
 	- Map
 		- Wins
 		- Deaths
+		- Play time
 		- PB
-			- Up to miliseconds if possible
 		- Jumps?
 		
 - Advanced features
 	- Show player specific HUD timer with time passed since activating 'start' checkpoint
 		- Also show this timer to a spectating player
-	- Visualize checkpoints during creation and after they have been saved
+	- Save checkpoints as map zones: have the player set two coordinates and use code to calculate a square box between the two
+	use this code for creating checkpoints, beginning and end zone and insta kill zones. Optionally visualize the box after creation
+	nice to have for the checkpoints. See references for sm plugin which does this
 	- Use database for stats
 	- Logging
 		- As done in previously listed plugin
@@ -95,6 +104,8 @@
 	- New maps
 		- NM3 hospital tower
 	- Modifications to existing maps
+		- Remove checkpoint generator/lights indicators if checkpoints are now marked with light beam
+		- Use insta kill map zones to prevent players being in places they shouldnt be
 		- BH1
 			- Make the final jump at bh1 easier
 				- First practice it a bit more to confirm it is too difficult

@@ -1,0 +1,62 @@
+multi-player server
+
+
+hostname: L4D2-SeRvEr|1ooTick|2oooFps|by sniper_o7
+version : 2.1.4.9 6801 secure  (unknown)
+udp/ip  : 192.168.1.20:27035 [ public 213.143.103.26:27035 ]
+os      : Linux Dedicated
+map     : c2m4_barns
+players : 5 humans, 0 bots (22 max) (not hibernating) (unreserved)
+
+# userid name uniqueid connected ping loss state rate
+#  2 1 "мя.Noob" STEAM_1:1:172504969 39:41 112 0 active 25000
+#  3 2 "FrozenForest" STEAM_1:0:34755833 39:41 149 0 active 30000
+# 36 3 "RB" STEAM_1:0:32599262 32:43 100 0 active 30000
+# 80 5 "s.rizvan77" STEAM_1:1:221028248 21:25 83 0 active 20000
+#152 "(1)Ellis" BOT active
+#163 "Hunter" BOT active
+#154 "Coach" BOT active
+#156 "(1)Coach" BOT active
+#158 "(2)Ellis" BOT active
+#160 "Rochelle" BOT active
+# 141 13 "Elucia de Lute Irma" STEAM_1:1:60678100 03:49 166 0 active 30000
+#end
+RB unpaused the game
+RB unpaused the game
+FrozenForest :  o that rochelle the hunter was on
+RB paused the game
+
+
+] sm plugins list
+ "Basic Ban Commands" (1.9.0.6131) by AlliedModders LLC
+ "Client Preferences" (1.9.0.6131) by AlliedModders LLC
+ "[L4D2] Custom admin commands" (1.0.9) by honorcode23
+ "L4D Players" (0.0.1) by NiCo-op
+ "Basic Commands" (1.9.0.6131) by AlliedModders LLC
+ "Anti-Flood" (1.9.0.6131) by AlliedModders LLC
+ "[L4D2] Weapon/Zombie Spawner" (1.0a) by Zuko & McFlurry
+ "Sound Commands" (1.9.0.6131) by AlliedModders LLC
+ "Basic Info Triggers" (1.9.0.6131) by AlliedModders LLC
+ "L4D and L4D2 game mode changer" (12) by Sharft 6
+To see more, type "sm plugins 11"
+CBaseClientState::FileReceived: downloads/c57c7e62.dat.
+TuncaNuera paused the game
+] sm plugins 11
+ "Admin File Reader" (1.9.0.6131) by AlliedModders LLC
+ "Reserved Slots" (1.9.0.6131) by AlliedModders LLC
+ "Player Commands" (1.9.0.6131) by AlliedModders LLC
+ "Admin Menu" (1.9.0.6131) by AlliedModders LLC
+ "Admin Help" (1.9.0.6131) by AlliedModders LLC
+ "Fun Votes" (1.9.0.6131) by AlliedModders LLC
+ "Fun Commands X" (2.3) by Spazman0 and Arg!
+ "Basic Comm Control" (1.9.0.6131) by AlliedModders LLC
+ "L4DSwitchPlayers" (1.4) by SkyDavid (djromero)
+ "L4D2 Infinite Ammo" (1.5.5) by Machine
+ "Super Versus Reloaded" (1.7.0) by DDRKhat & Marcus101RR
+To see more, type "sm plugins 22"
+TuncaNuera unpaused the game
+TuncaNuera unpaused the game
+] sm plugins 22
+ "Basic Votes" (1.9.0.6131) by AlliedModders LLC
+ "Basic Chat" (1.9.0.6131) by AlliedModders LLC
+ "Fun Commands" (1.9.0.6131) by AlliedModders LLC
