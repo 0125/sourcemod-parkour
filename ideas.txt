@@ -55,10 +55,16 @@ Achievements
 			
 		Skin sources
 			Player model
+				Infected models + animations (instead of just model with !setmodel). Normal + special infected
+					promising thread: https://forums.alliedmods.net/showthread.php?p=1022656
+				
 				!setmodel [SM] Usage: sm_setmodel <#userid|name> [model] Example: !setmodel @me models/props_interiors/table_bedside.mdl 
 					Which plugin enables setmodel?
 					Find complete list of models
-					Find models which could be good to unlock with achievements
+					Models which could be good to unlock with achievements
+						sm_setmodel @me "models\items\l4d_gift.mdl"			small rotating l4d style gift box
+						sm_setmodel @me "models\extras\info_speech.mdl"		info speech bubble used in the parkour maps
+						>possibly more
 			
 			Player colour/transparency
 				- check funcommands/funcommandsX has commands for changing skins - tested and does not work on l4d2, might work on l4d1
@@ -76,3 +82,79 @@ Visualize checkpoints using something else beside a blue light/generator
 	!beacon type animation
 	Some counter strike surf servers have a 'box outline' of the bounds of the checkpoint
 	Light beam upwards from the ground
+
+Additional maps
+	Possibly make it so one map can have multiple different routes. which would enable infinite routes as opposed to being limited by the amount of maps
+		Could be made possible in a few different ways
+			somehow modify the fort spawner/prop spawner plugin
+			use a different prop spawner plugin and port the vanilla props to that format
+			create a new plugin/ use the parkour plugin to switch/rename around fort spawner files for a map before fort spawner accesses them
+		Issues
+			- Map vote would need to include the multiple different versions for the same map, and when chosen separate the map and the version and pass it on to the
+			function that is going to change the fort changer files around for the chosen map
+			- the countdown plugin would need to also include the different versions
+	
+	vanilla parkour map list
+		l4d_airport01_greenhouse
+		l4d_airport02_offices
+		l4d_airport03_garage
+		l4d_airport05_runway
+		l4d_farm01_hilltop
+		l4d_farm04_barn
+		l4d_hospital01_apartment
+		l4d_hospital03_sewers
+		l4d_hospital04_interior
+		l4d_hospital05_rooftop
+		l4d_smalltown01_caves
+		l4d_smalltown03_ranchhouse
+		l4d_smalltown05_houseboat
+
+	full l4d1 map list
+		l4d_river01_docks
+		l4d_river02_barge
+		l4d_river03_port
+		credits
+		l4d_airport01_greenhouse
+		l4d_airport02_offices
+		l4d_airport03_garage
+		l4d_airport04_terminal
+		l4d_airport05_runway
+		l4d_farm01_hilltop
+		l4d_farm02_traintunnel
+		l4d_farm03_bridge
+		l4d_farm04_barn
+		l4d_farm05_cornfield
+		l4d_garage01_alleys
+		l4d_garage02_lots
+		l4d_hospital01_apartment
+		l4d_hospital02_subway
+		l4d_hospital03_sewers
+		l4d_hospital04_interior
+		l4d_hospital05_rooftop
+		l4d_smalltown01_caves
+		l4d_smalltown02_drainage
+		l4d_smalltown03_ranchhouse
+		l4d_smalltown04_mainstreet
+		l4d_smalltown05_houseboat
+		l4d_sv_lighthouse
+		l4d_vs_airport01_greenhouse
+		l4d_vs_airport02_offices
+		l4d_vs_airport03_garage
+		l4d_vs_airport04_terminal
+		l4d_vs_airport05_runway
+		l4d_vs_farm01_hilltop
+		l4d_vs_farm02_traintunnel
+		l4d_vs_farm03_bridge
+		l4d_vs_farm04_barn
+		l4d_vs_farm05_cornfield
+		l4d_vs_hospital01_apartment
+		l4d_vs_hospital02_subway
+		l4d_vs_hospital03_sewers
+		l4d_vs_hospital04_interior
+		l4d_vs_hospital05_rooftop
+		l4d_vs_smalltown01_caves
+		l4d_vs_smalltown02_drainage
+		l4d_vs_smalltown03_ranchhouse
+		l4d_vs_smalltown04_mainstreet
+		l4d_vs_smalltown05_houseboat
+		tutorial_standards
