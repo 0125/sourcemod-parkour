@@ -143,7 +143,7 @@ public Action Command_Checkpoint_Save(int client, int args) {
 	char arg1[128];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	if (arg1[0] == 0) {
-		ReplyToCommand(client, "[CHECKPOINT] Usage: g_hChk_save <checkpoint>");
+		ReplyToCommand(client, "[CHECKPOINT] Usage: chk_save <checkpoint>");
 		return Plugin_Handled;
 	}
 	checkpointTimer("stop");
@@ -177,7 +177,7 @@ public Action Command_Checkpoint_Delete(int client, int args) {
 	char arg1[128];
 	GetCmdArg(1, arg1, sizeof(arg1));
 	if (arg1[0] == 0) {
-		ReplyToCommand(client, "[CHECKPOINT] Usage: g_hChk_delete <checkpoint>");
+		ReplyToCommand(client, "[CHECKPOINT] Usage: chk_delete <checkpoint>");
 		return Plugin_Handled;
 	}
 	checkpointTimer("stop");

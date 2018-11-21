@@ -149,6 +149,7 @@
 	- !help
 		Print all information notifications in console, notify the player about this
 		L4d1 has a bug where the console content gets scrabled, would this affect the command?
+		Console+chat <server website / motd>
 	
 	- !checkpoint
 		Enable practice mode for the player, save current coordinates as checkpoint possibly overriding previously

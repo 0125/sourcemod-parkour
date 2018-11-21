@@ -1,4 +1,8 @@
 Changing maps
 - Maps only change every x seconds with map countdown
-- Instead of loading the next map when someone completes it, record their stats and teleport them back to the beginning, also announce stats
+- Instead of loading the next map when someone completes it
+  - record their stats
+  - announce stats
+  - reset any checkpoints
+  - teleport them back to the beginning
 - Possibly have a mapvote command
