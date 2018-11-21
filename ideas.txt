@@ -1,8 +1,78 @@
+Misc
+	Disable shove? if possible
+	Make it so users cant push each other around
+	Remove all props from the map or just weapons
+
 Changing maps
-- Maps only change every x seconds with map countdown
-- Instead of loading the next map when someone completes it
-  - record their stats
-  - announce stats
-  - reset any checkpoints
-  - teleport them back to the beginning
-- Possibly have a mapvote command
+	Maps only change every x seconds with map countdown
+	Instead of loading the next map when someone completes it, record their stats, reset their stats and then teleport them back to the start checkpoint, also announce stats
+	Possibly have a mapvote command
+	
+Items
+	Items would need to despawn on death because with many deaths the amount of items would pile up and crash the server
+	On spawn
+		Pills
+		Kit
+		Weapon without the ability to shoot? 0 ammo just disables being able to hold the weapon
+
+Bugs
+	A lot of the maps have skips, these would need to be fixed for stats to not be pointless
+	Bug where incapped/hanging off ledge survivor health is set to 0 immediately but there is still a short window of time he can be helped up needs to be fixed
+
+(github) website
+	Have a youtube playlist with each map being completed with nosboard on the screen
+	
+!stats command
+	Brings up a menu with options
+		Print own stats
+			Prints PB, total deaths, total victories for current map in chat. Possibly also victories combined in all maps
+		Show map fastest top 10
+			Brings up a menu with top 10 fastest times for this map
+		Show map least deaths top 10
+			Brings up a menu with top 10 leasts times for this map
+		Show server top 10
+			Top 10 most victories combined in all maps
+			
+
+Achievements
+	Skins
+		Option 1
+			Let users unlock different skins based on achievements
+				!skins menu which lists the skins and which achievement is required
+					eg:
+						<zoey> 
+						<bill> 
+						<francis> 
+						<louis> 
+						<black skin> completed all maps
+						<table model> completed all maps
+						<different colour skin> x total victories
+			Save skins between maps or even between connects to the server
+		
+		Option 2
+			Applying skins to users in a milestone way without a menu eg: first skin unlocked by completing all maps, and after that by total victories
+			Downside to this is users cant tell which milestone is which skin because there is no menu to tell them
+			
+		Skin sources
+			Player model
+				!setmodel [SM] Usage: sm_setmodel <#userid|name> [model] Example: !setmodel @me models/props_interiors/table_bedside.mdl 
+					Which plugin enables setmodel?
+					Find complete list of models
+					Find models which could be good to unlock with achievements
+			
+			Player colour/transparency
+				- check funcommands/funcommandsX has commands for changing skins - tested and does not work on l4d2, might work on l4d1
+					sm_invisplayer = hides player except for their items
+					sm_disco is mentioned in the source thread which does exactly what i need 
+				- !freeze sets the player transparency and colour
+				- !beacon and sm_beacon_radius without the sound
+				- !firebomb also changes the players colour
+				- !freezebomb also changes the players colour
+	
+	Message on joining the server
+		<username> joined the server! <pb time this map> <pb deaths this map> | <completed all maps> <x total victories>
+		
+Visualize checkpoints using something else beside a blue light/generator
+	!beacon type animation
+	Some counter strike surf servers have a 'box outline' of the bounds of the checkpoint
+	Light beam upwards from the ground
