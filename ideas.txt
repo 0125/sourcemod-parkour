@@ -3,6 +3,9 @@ Misc
 	Make it so users cant push each other around
 	Remove all props from the map or just weapons
 
+Internet
+	Steam guide/ group page, example: https://steamcommunity.com/groups/CarnivalServer
+	
 Changing maps
 	Maps only change every x seconds with map countdown
 	Instead of loading the next map when someone completes it, record their stats, reset their stats and then teleport them back to the start checkpoint, also announce stats
